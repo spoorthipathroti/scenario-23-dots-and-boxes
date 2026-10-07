@@ -27,8 +27,12 @@ class DotsAndBoxes:
             if not parts:
                 continue
 
-            # Handle Undo command
-            if len(parts) == 1 and parts[0] == "U":
+            # Handle Undo Command
+            if parts[0] == "U":
+                if len(parts) > 1:
+                    print("Invalid format. Use 'U' to undo.")
+                    continue
+
                 if not can_undo(self.history):
                     print("No moves to undo.")
                     continue
@@ -39,14 +43,14 @@ class DotsAndBoxes:
                     col,
                     player,
                     score_gained,
-                    prev_completed,
+                    prev_completed
                 ) = self.history.pop()
 
                 self.board.remove_line(
                     orientation,
                     row,
                     col,
-                    prev_completed,
+                    prev_completed
                 )
 
                 self.scores[player] -= score_gained
@@ -59,32 +63,47 @@ class DotsAndBoxes:
 
                 continue
 
+            # Handle normal line moves
             if len(parts) != 3:
-                print("Invalid format.")
+                print(
+                    "Invalid format. Use 'H row col' or 'V row col'."
+                )
                 continue
 
-            orientation, row, col = parts
+            orientation, row_str, col_str = parts
 
-            if not row.isdigit() or not col.isdigit():
-                print("Row and column must be numbers.")
+            if orientation not in {"H", "V"}:
+                print("Invalid orientation. Must be 'H' or 'V'.")
                 continue
 
-            row, col = int(row), int(col)
+            # Check coordinates
+            if not row_str.isdigit() or not col_str.isdigit():
+                print(
+                    "Row and column must be non-negative numbers."
+                )
+                continue
 
+            row, col = int(row_str), int(col_str)
+
+            # Check bounds and repeated lines
             if not valid_move(self.board, orientation, row, col):
-                print("Invalid or already-used move.")
+                print(
+                    "Invalid move, coordinate out of bounds, "
+                    "or line already used."
+                )
                 continue
 
+            # Save board state before move
             before = set(self.board.completed)
 
             self.board.add_line(orientation, row, col)
 
             newly_completed = completed_boxes(
                 self.board,
-                before,
+                before
             )
 
-            # Save the move so it can be undone later
+            # Add only valid moves to undo history
             self.history.append(
                 (
                     orientation,
@@ -92,7 +111,7 @@ class DotsAndBoxes:
                     col,
                     self.current,
                     newly_completed,
-                    before,
+                    before
                 )
             )
 
