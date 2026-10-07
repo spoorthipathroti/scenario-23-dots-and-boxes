@@ -76,3 +76,23 @@ Submission is only the following three things:
 - [ ] A 10-second video of gameplay **before** your changes, showing the bug/broken behavior
 - [ ] A 10-second video of gameplay **after** your changes, showing the bug fixed and the new features working
 - [ ] The Chat/LLM used page link, with the complete chat history
+
+
+## Testing and Design Decisions
+
+Automated tests were added using Python's built-in unittest framework.
+
+The tests cover:
+- Valid horizontal move
+- Valid vertical move
+- Invalid and repeated moves
+- Completion of a box
+- End-of-game condition
+
+Design decisions:
+- The existing modular structure was preserved.
+- Board state is handled by board.py.
+- Move validation is handled by rules.py.
+- Game flow and score/turn handling remain in game.py.
+- The Undo feature uses move history so previous board and score states can be restored.
+- Invalid input is rejected without modifying the board or scores.
