@@ -1,6 +1,7 @@
 from board import Board
 from rules import valid_move, completed_boxes
 
+
 class DotsAndBoxes:
     def __init__(self):
         self.board = Board()
@@ -38,7 +39,17 @@ class DotsAndBoxes:
 
             if newly_completed:
                 self.scores[self.current] += newly_completed
-                print(f"Player {self.current + 1} completed {newly_completed} box(es) and plays again.")
+
+                if self.board.is_complete():
+                    print(
+                        f"Player {self.current + 1} "
+                        f"completed {newly_completed} box(es)."
+                    )
+                else:
+                    print(
+                        f"Player {self.current + 1} "
+                        f"completed {newly_completed} box(es) and plays again."
+                    )
             else:
                 self.current = 1 - self.current
 
