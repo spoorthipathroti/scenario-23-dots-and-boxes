@@ -18,3 +18,7 @@ def valid_move(board, orientation, row, col):
 
 def completed_boxes(board, before):
     return len(board.completed - before)
+
+
+def can_undo(history):
+    return len(history) > 0
